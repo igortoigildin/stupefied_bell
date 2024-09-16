@@ -38,7 +38,7 @@ func addOrderHandler(cfg *config.Config, repository OrderRepository) http.Handle
 		}
 
 		if order.Number == "" {
-			logger.Log.Info("cannot decode request JSON body", zap.Error(err))
+			logger.Log.Info("order number not provided", zap.Error(err))
 			w.WriteHeader(http.StatusBadRequest)
 			return
 		}

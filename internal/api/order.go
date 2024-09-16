@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
 
 	"github.com/igortoigildin/stupefied_bell/internal/config"
@@ -42,6 +43,12 @@ func addOrderHandler(cfg *config.Config, repository OrderRepository) http.Handle
 			return
 		}
 
+		if number == "" {
+			logger.Log.Info("order already exists", zap.Error(err))
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+
 		var response struct {
 			Number string `json:"number"`
 		}
@@ -50,7 +57,7 @@ func addOrderHandler(cfg *config.Config, repository OrderRepository) http.Handle
 		err = processjson.WriteJSON(w, http.StatusOK, response, nil)
 		if err != nil {
 			logger.Log.Info("error while saving order", zap.Error(err))
-			w.WriteHeader(http.StatusInternalServerError)
+			w.WriteHeader(http.StatusAccepted)
 			return
 		}
 	})
@@ -93,6 +100,7 @@ func deleteOrder(cfg *config.Config, repository OrderRepository) http.HandlerFun
 		defer cancel()
 
 		number := r.URL.Query().Get("id")
+		fmt.Println(number)
 		err := repository.DeleteOrder(ctx, number)
 		if err != nil {
 			logger.Log.Info("error while deleting order", zap.Error(err))

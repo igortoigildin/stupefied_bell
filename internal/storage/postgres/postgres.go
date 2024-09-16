@@ -37,8 +37,7 @@ func (rep *Repository) SaveOrder(ctx context.Context, order model.Order) (string
 	if err != nil {
 		switch {
 		case errors.Is(err, sql.ErrNoRows):
-			// order already exist
-			return number, nil
+			return number, nil // order already exists
 		default:
 			logger.Log.Error("error while inserting order", zap.Error(err))
 			return number, err
@@ -57,7 +56,7 @@ func (rep *Repository) SelectAllOrders(ctx context.Context) ([]model.Order, erro
 	defer rows.Close()
 	for rows.Next() {
 		var order model.Order
-		err = rows.Scan(order.Number, order.Title, order.Quantity, order.Comment, order.UploadedAt)
+		err = rows.Scan(&order.Number, &order.Quantity, &order.Title, &order.Comment, &order.UploadedAt)
 		if err != nil {
 			return nil, err
 		}

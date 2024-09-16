@@ -16,6 +16,7 @@ import (
 	"go.uber.org/zap"
 )
 
+//go:generate  mockery --name=OrderRepository
 type OrderRepository interface {
 	SaveOrder(ctx context.Context, order model.Order) (string, error)
 	SelectAllOrders(ctx context.Context) ([]model.Order, error)
@@ -31,6 +32,12 @@ func addOrderHandler(cfg *config.Config, repository OrderRepository) http.Handle
 		var order model.Order
 		err := processjson.ReadJSON(r, &order)
 		if err != nil {
+			logger.Log.Info("cannot decode request JSON body", zap.Error(err))
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+
+		if order.Number == "" {
 			logger.Log.Info("cannot decode request JSON body", zap.Error(err))
 			w.WriteHeader(http.StatusBadRequest)
 			return

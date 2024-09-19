@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/igortoigildin/stupefied_bell/internal/logger"
+	"github.com/igortoigildin/stupefied_bell/pkg/logger"
 	"go.uber.org/zap"
 )
 

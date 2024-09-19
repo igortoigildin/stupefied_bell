@@ -9,10 +9,10 @@ import (
 	"net/http"
 
 	"github.com/igortoigildin/stupefied_bell/internal/config"
-	processjson "github.com/igortoigildin/stupefied_bell/internal/lib/processJSON"
-	"github.com/igortoigildin/stupefied_bell/internal/logger"
 	"github.com/igortoigildin/stupefied_bell/internal/model"
 	"github.com/igortoigildin/stupefied_bell/internal/storage"
+	processjson "github.com/igortoigildin/stupefied_bell/pkg/lib/processJSON"
+	"github.com/igortoigildin/stupefied_bell/pkg/logger"
 	"go.uber.org/zap"
 )
 
@@ -33,13 +33,13 @@ func addOrderHandler(cfg *config.Config, repository OrderRepository) http.Handle
 		err := processjson.ReadJSON(r, &order)
 		if err != nil {
 			logger.Log.Info("cannot decode request JSON body", zap.Error(err))
-			w.WriteHeader(http.StatusBadRequest)
+			processjson.SendJSONError(w, http.StatusBadRequest, "body contains badly-formed JSON")
 			return
 		}
 
 		if order.Number == "" {
 			logger.Log.Info("order number not provided", zap.Error(err))
-			w.WriteHeader(http.StatusBadRequest)
+			processjson.SendJSONError(w, http.StatusBadRequest, "order number not provided")
 			return
 		}
 
@@ -126,7 +126,7 @@ func updateOrder(cfg *config.Config, repository OrderRepository) http.HandlerFun
 		err := processjson.ReadJSON(r, &order)
 		if err != nil {
 			logger.Log.Info("cannot decode request JSON body", zap.Error(err))
-			w.WriteHeader(http.StatusBadRequest)
+			processjson.SendJSONError(w, http.StatusBadRequest, "body contains badly-formed JSON")
 			return
 		}
 
@@ -135,7 +135,7 @@ func updateOrder(cfg *config.Config, repository OrderRepository) http.HandlerFun
 			switch {
 			case errors.Is(err, storage.ErrOrderNotFound):
 				logger.Log.Info("such order not found", zap.Error(err))
-				w.WriteHeader(http.StatusBadRequest)
+				processjson.SendJSONError(w, http.StatusBadRequest, "such order not found")
 				return
 			default:
 				logger.Log.Info("error while deleting order", zap.Error(err))

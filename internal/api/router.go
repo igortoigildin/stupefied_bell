@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/igortoigildin/stupefied_bell/internal/config"
-	logging "github.com/igortoigildin/stupefied_bell/internal/lib/logger"
+	logging "github.com/igortoigildin/stupefied_bell/pkg/lib/logger"
 )
 
 func Router(cfg *config.Config, rep OrderRepository) *http.ServeMux {

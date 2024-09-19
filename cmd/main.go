@@ -2,7 +2,6 @@ package main
 
 import (
 	"database/sql"
-	"errors"
 	"net/http"
 
 	"github.com/golang-migrate/migrate/v4"
@@ -10,8 +9,8 @@ import (
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 	api "github.com/igortoigildin/stupefied_bell/internal/api"
 	"github.com/igortoigildin/stupefied_bell/internal/config"
-	"github.com/igortoigildin/stupefied_bell/internal/logger"
 	psql "github.com/igortoigildin/stupefied_bell/internal/storage/postgres"
+	"github.com/igortoigildin/stupefied_bell/pkg/logger"
 	_ "github.com/jackc/pgx/v5/stdlib"
 	"go.uber.org/zap"
 )
@@ -40,7 +39,7 @@ func main() {
 		logger.Log.Fatal("migration error", zap.Error(err))
 	}
 	err = migrator.Up()
-	if err != nil || errors.Is(err, migrate.ErrNoChange) {
+	if err := migrator.Up(); err != nil && err != migrate.ErrNoChange {
 		logger.Log.Fatal("migration error", zap.Error(err))
 	}
 	logger.Log.Info("database connection established")

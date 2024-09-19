@@ -5,9 +5,9 @@ import (
 	"database/sql"
 	"errors"
 
-	"github.com/igortoigildin/stupefied_bell/internal/logger"
 	"github.com/igortoigildin/stupefied_bell/internal/model"
 	"github.com/igortoigildin/stupefied_bell/internal/storage"
+	"github.com/igortoigildin/stupefied_bell/pkg/logger"
 	"go.uber.org/zap"
 )
 

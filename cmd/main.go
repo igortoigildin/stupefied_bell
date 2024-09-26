@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"database/sql"
 	"net/http"
 
@@ -10,6 +11,7 @@ import (
 	api "github.com/igortoigildin/stupefied_bell/internal/api"
 	"github.com/igortoigildin/stupefied_bell/internal/config"
 	psql "github.com/igortoigildin/stupefied_bell/internal/storage/postgres"
+	"github.com/igortoigildin/stupefied_bell/kafka"
 	"github.com/igortoigildin/stupefied_bell/pkg/logger"
 	_ "github.com/jackc/pgx/v5/stdlib"
 	"go.uber.org/zap"
@@ -50,6 +52,16 @@ func main() {
 	}
 
 	mux := api.Router(cfg, storage)
+
+	// Kafka
+	kfk := kafka.NewKafka(*cfg)
+	ctx := context.Background()
+	err = kfk.Produce(ctx, []byte("new_key"), []byte("new value"))
+	if err != nil {
+		logger.Log.Info("Kafka failed to write a message", zap.Error(err))
+	}
+
+	go kfk.Consume(ctx)
 
 	srv := &http.Server{
 		Addr:         cfg.Address,

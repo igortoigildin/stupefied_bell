@@ -29,9 +29,9 @@ type HTTPserver struct {
 }
 
 type Kafka struct {
-	Brokers []string `env-required:"true" yaml:"brokers" env:"KAFKA_BROKERS"` // ["broker:9092"]
-	Topic   string   `env-requeired:"true" yaml:"topic" env:"KAFKF_TOPIC"`    // "my_topic"
-	// GroupID string `env-required:"true" yaml:"group_id" env:"KAFKA_GROUP_ID"` // "my_group"
+	Brokers []string `env-required:"true" yaml:"brokers" env:"KAFKA_BROKERS"`   // ["broker:9092"]
+	Topic   string   `env-requeired:"true" yaml:"topic" env:"KAFKA_TOPIC"`      // "my_topic"
+	GroupID string   `env-required:"true" yaml:"group_id" env:"KAFKA_GROUP_ID"` // "my_group"
 }
 
 func MustLoad() *Config {

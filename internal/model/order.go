@@ -8,4 +8,5 @@ type Order struct {
 	Title      string    `json:"title"`
 	UploadedAt time.Time `json:"date"`
 	Comment    string    `json:"comment,omitempty"`
+	Status     string    `json:"status"`
 }

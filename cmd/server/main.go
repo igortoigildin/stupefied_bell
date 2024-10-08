@@ -1,10 +1,10 @@
 package main
 
 import (
-	"context"
 	"database/sql"
 	"net/http"
 
+	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
@@ -12,15 +12,16 @@ import (
 	api "github.com/igortoigildin/stupefied_bell/internal/api/http"
 	"github.com/igortoigildin/stupefied_bell/internal/config"
 	psql "github.com/igortoigildin/stupefied_bell/internal/storage/postgres"
-	"github.com/igortoigildin/stupefied_bell/kafka"
 
+	order "github.com/igortoigildin/stupefied_bell/pkg/lib/randOrder"
 	"github.com/igortoigildin/stupefied_bell/pkg/logger"
 	_ "github.com/jackc/pgx/v5/stdlib"
 	"go.uber.org/zap"
 )
 
 const (
-	grpcPort = 50051
+	grpcPort   = 50051
+	kafkaTopic = "orders-v1-topic"
 )
 
 func main() {
@@ -46,8 +47,7 @@ func main() {
 	if err != nil {
 		logger.Log.Fatal("migration error", zap.Error(err))
 	}
-	err = migrator.Up()
-	if err := migrator.Up(); err != nil && err != migrate.ErrNoChange {
+	if err = migrator.Up(); err != nil && err != migrate.ErrNoChange {
 		logger.Log.Fatal("migration error", zap.Error(err))
 	}
 	logger.Log.Info("database connection established")
@@ -57,15 +57,28 @@ func main() {
 
 	go application.GRPCServer.MustRun()
 
-	// Kafka
-	kfk := kafka.NewKafka(*cfg)
-	ctx := context.Background()
-	err = kfk.Produce(ctx, []byte("new_key"), []byte("new value"))
+	// Kafka producer
+	p, err := kafka.NewProducer(&kafka.ConfigMap{
+		"bootstrap.servers": cfg.Kafka.Brokers[0],
+	})
 	if err != nil {
-		logger.Log.Info("Kafka failed to write a message", zap.Error(err))
+		logger.Log.Info("Kafka failed to initialize", zap.Error(err))
+	}
+	defer p.Close()
+
+	order, err := order.RandomOrder()
+	if err != nil {
+		logger.Log.Error("failed to encode order for kafka", zap.Error(err))
 	}
 
-	go kfk.Consume(ctx)
+	topic := cfg.Kafka.Topic
+	err = p.Produce(&kafka.Message{
+		TopicPartition: kafka.TopicPartition{Topic: &topic, Partition: kafka.PartitionAny},
+		Value:          order,
+	}, nil)
+	if err != nil {
+		logger.Log.Error("failed to encode order for kafka", zap.Error(err))
+	}
 
 	// http server
 	storage := psql.NewRepository(db)

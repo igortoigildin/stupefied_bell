@@ -3,5 +3,6 @@ CREATE TABLE IF NOT EXISTS orders (
     quantity INT NOT NULL,
     title VARCHAR(15) NOT NULL,
     comment TEXT,
-    uploaded_at timestamp
+    uploaded_at timestamp,
+    status VARCHAR(15)
 );

@@ -11,6 +11,12 @@ service Delivery {
 }
 
 message SetDeliveryStatusRequest {
-    string status = 1; // Status to be set.
+    Status status = 1; // Status to be set.
     string order_id = 2; // ID of order to be udpated.
+}
+
+enum Status {
+    STATUS_NEW = 0;
+    STATUS_DELIVERED = 1;
+    STATUS_ACCEPTED = 2;
 }

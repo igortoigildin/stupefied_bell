@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/igortoigildin/stupefied_bell/internal/model"
+	"github.com/igortoigildin/stupefied_bell/internal/order/model"
 	"github.com/igortoigildin/stupefied_bell/pkg/logger"
 	"go.uber.org/zap"
 )

@@ -1,8 +1,10 @@
+CREATE TYPE status AS ENUM ('NEW', 'DELIVERED');
+
 CREATE TABLE IF NOT EXISTS orders (
-    number VARCHAR(15) PRIMARY KEY,
+    id VARCHAR(15) PRIMARY KEY,
     quantity INT NOT NULL,
     title VARCHAR(15) NOT NULL,
     comment TEXT,
     uploaded_at timestamp,
-    status VARCHAR(15)
+    current_status status,
 );

@@ -12,7 +12,8 @@ import (
 	"go.uber.org/zap"
 )
 
-func HandlerOrderDone(cfg *config.Config) echo.HandlerFunc {
+// Endpoint which listens requests with order id and status as query params.
+func handlerUpdateStatus(cfg *config.Config) echo.HandlerFunc {
 	return func(c echo.Context) error {
 
 		id := c.QueryParam("id")

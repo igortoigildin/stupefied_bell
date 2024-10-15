@@ -14,15 +14,15 @@ import (
 )
 
 type ServerAPI struct {
-	delivery.UnimplementedDeliveryServer
+	delivery.UnimplementedDeliveryServiceServer
 	OrderRepository repo.OrderRepository
 }
 
 func Register(gRPC *grpc.Server, repo repo.OrderRepository) {
-	delivery.RegisterDeliveryServer(gRPC, &ServerAPI{OrderRepository: repo})
+	delivery.RegisterDeliveryServiceServer(gRPC, &ServerAPI{OrderRepository: repo})
 }
 
-func (s *ServerAPI) SetDeliveryStatus(ctx context.Context, req *delivery.SetDeliveryStatusRequest) (*emptypb.Empty, error) {
+func (s *ServerAPI) SetDeliveryStatus(ctx context.Context, req *delivery.SetStatusRequest) (*emptypb.Empty, error) {
 	err := s.OrderRepository.UpdateStatus(ctx, req.GetOrderId(), req.GetStatus().Enum().String())
 	if err != nil {
 		if errors.Is(err, storage.ErrOrderNotFound) {

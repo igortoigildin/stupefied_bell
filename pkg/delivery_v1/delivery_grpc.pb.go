@@ -20,101 +20,101 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Delivery_SetDeliveryStatus_FullMethodName = "/delivery.Delivery/SetDeliveryStatus"
+	DeliveryService_SetStatus_FullMethodName = "/order.DeliveryService/SetStatus"
 )
 
-// DeliveryClient is the client API for Delivery service.
+// DeliveryServiceClient is the client API for DeliveryService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type DeliveryClient interface {
-	SetDeliveryStatus(ctx context.Context, in *SetDeliveryStatusRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+type DeliveryServiceClient interface {
+	SetStatus(ctx context.Context, in *SetStatusRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
-type deliveryClient struct {
+type deliveryServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewDeliveryClient(cc grpc.ClientConnInterface) DeliveryClient {
-	return &deliveryClient{cc}
+func NewDeliveryServiceClient(cc grpc.ClientConnInterface) DeliveryServiceClient {
+	return &deliveryServiceClient{cc}
 }
 
-func (c *deliveryClient) SetDeliveryStatus(ctx context.Context, in *SetDeliveryStatusRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *deliveryServiceClient) SetStatus(ctx context.Context, in *SetStatusRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, Delivery_SetDeliveryStatus_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, DeliveryService_SetStatus_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// DeliveryServer is the server API for Delivery service.
-// All implementations must embed UnimplementedDeliveryServer
+// DeliveryServiceServer is the server API for DeliveryService service.
+// All implementations must embed UnimplementedDeliveryServiceServer
 // for forward compatibility.
-type DeliveryServer interface {
-	SetDeliveryStatus(context.Context, *SetDeliveryStatusRequest) (*emptypb.Empty, error)
-	mustEmbedUnimplementedDeliveryServer()
+type DeliveryServiceServer interface {
+	SetStatus(context.Context, *SetStatusRequest) (*emptypb.Empty, error)
+	mustEmbedUnimplementedDeliveryServiceServer()
 }
 
-// UnimplementedDeliveryServer must be embedded to have
+// UnimplementedDeliveryServiceServer must be embedded to have
 // forward compatible implementations.
 //
 // NOTE: this should be embedded by value instead of pointer to avoid a nil
 // pointer dereference when methods are called.
-type UnimplementedDeliveryServer struct{}
+type UnimplementedDeliveryServiceServer struct{}
 
-func (UnimplementedDeliveryServer) SetDeliveryStatus(context.Context, *SetDeliveryStatusRequest) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SetDeliveryStatus not implemented")
+func (UnimplementedDeliveryServiceServer) SetStatus(context.Context, *SetStatusRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetStatus not implemented")
 }
-func (UnimplementedDeliveryServer) mustEmbedUnimplementedDeliveryServer() {}
-func (UnimplementedDeliveryServer) testEmbeddedByValue()                  {}
+func (UnimplementedDeliveryServiceServer) mustEmbedUnimplementedDeliveryServiceServer() {}
+func (UnimplementedDeliveryServiceServer) testEmbeddedByValue()                         {}
 
-// UnsafeDeliveryServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to DeliveryServer will
+// UnsafeDeliveryServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to DeliveryServiceServer will
 // result in compilation errors.
-type UnsafeDeliveryServer interface {
-	mustEmbedUnimplementedDeliveryServer()
+type UnsafeDeliveryServiceServer interface {
+	mustEmbedUnimplementedDeliveryServiceServer()
 }
 
-func RegisterDeliveryServer(s grpc.ServiceRegistrar, srv DeliveryServer) {
-	// If the following call pancis, it indicates UnimplementedDeliveryServer was
+func RegisterDeliveryServiceServer(s grpc.ServiceRegistrar, srv DeliveryServiceServer) {
+	// If the following call pancis, it indicates UnimplementedDeliveryServiceServer was
 	// embedded by pointer and is nil.  This will cause panics if an
 	// unimplemented method is ever invoked, so we test this at initialization
 	// time to prevent it from happening at runtime later due to I/O.
 	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
 		t.testEmbeddedByValue()
 	}
-	s.RegisterService(&Delivery_ServiceDesc, srv)
+	s.RegisterService(&DeliveryService_ServiceDesc, srv)
 }
 
-func _Delivery_SetDeliveryStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SetDeliveryStatusRequest)
+func _DeliveryService_SetStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetStatusRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DeliveryServer).SetDeliveryStatus(ctx, in)
+		return srv.(DeliveryServiceServer).SetStatus(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Delivery_SetDeliveryStatus_FullMethodName,
+		FullMethod: DeliveryService_SetStatus_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DeliveryServer).SetDeliveryStatus(ctx, req.(*SetDeliveryStatusRequest))
+		return srv.(DeliveryServiceServer).SetStatus(ctx, req.(*SetStatusRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// Delivery_ServiceDesc is the grpc.ServiceDesc for Delivery service.
+// DeliveryService_ServiceDesc is the grpc.ServiceDesc for DeliveryService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var Delivery_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "delivery.Delivery",
-	HandlerType: (*DeliveryServer)(nil),
+var DeliveryService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "order.DeliveryService",
+	HandlerType: (*DeliveryServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "SetDeliveryStatus",
-			Handler:    _Delivery_SetDeliveryStatus_Handler,
+			MethodName: "SetStatus",
+			Handler:    _DeliveryService_SetStatus_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

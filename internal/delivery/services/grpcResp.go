@@ -24,19 +24,19 @@ func SendGRPCResponse(cfg *config.Config, status string, id string) error {
 	}
 	defer conn.Close()
 
-	c := delivery.NewDeliveryClient(conn)
+	c := delivery.NewDeliveryServiceClient(conn)
 
 	ctx, cancel := context.WithTimeout(context.Background(), cfg.GRPCServer.Timeout)
 	defer cancel()
 	
 	if status == statusDelivered {
-		_, err = c.SetDeliveryStatus(ctx, &delivery.SetDeliveryStatusRequest{Status: 1, OrderId: id}) 
+		_, err = c.SetStatus(ctx, &delivery.SetStatusRequest{Status: 1, OrderId: id}) 
 		if err != nil {
 			logger.Log.Error("failed to update status:", zap.Error(err))
 			return err
 		}
 	} else if status == statusAccepted {
-		_, err = c.SetDeliveryStatus(ctx, &delivery.SetDeliveryStatusRequest{Status: 2, OrderId: id})
+		_, err = c.SetStatus(ctx, &delivery.SetStatusRequest{Status: 2, OrderId: id})
 		if err != nil {
 			logger.Log.Error("failed to update status:", zap.Error(err))
 			return err

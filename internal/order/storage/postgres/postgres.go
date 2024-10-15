@@ -27,7 +27,7 @@ func (rep *Repository) SaveOrder(ctx context.Context, order model.Order) (string
 	VALUES ($1, $2, $3, $4, now() AT TIME ZONE 'MSK', $5) ON CONFLICT DO NOTHING RETURNING number;`
 
 	args := []any{
-		order.Number,
+		order.Id,
 		order.Title,
 		order.Quantity,
 		order.Comment,
@@ -57,7 +57,7 @@ func (rep *Repository) SelectAllOrders(ctx context.Context) ([]model.Order, erro
 	defer rows.Close()
 	for rows.Next() {
 		var order model.Order
-		err = rows.Scan(&order.Number, &order.Quantity, &order.Title, &order.Comment, &order.UploadedAt, &order.Status)
+		err = rows.Scan(&order.Id, &order.Quantity, &order.Title, &order.Comment, &order.UploadedAt, &order.Status)
 		if err != nil {
 			return nil, err
 		}
@@ -81,7 +81,7 @@ func (rep *Repository) DeleteOrder(ctx context.Context, number string) error {
 func (rep *Repository) UpdateOrder(ctx context.Context, order model.Order) error {
 	query := `
 	UPDATE orders SET title = $1, quantity = $2, comment = $3, status = $4 WHERE id = $5;`
-	res, err := rep.db.Exec(query, order.Title, order.Quantity, order.Comment, order.Status, order.Number)
+	res, err := rep.db.Exec(query, order.Title, order.Quantity, order.Comment, order.Status, order.Id)
 	if err != nil {
 		return err
 	}

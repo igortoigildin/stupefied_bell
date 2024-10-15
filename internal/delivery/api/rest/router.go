@@ -7,5 +7,5 @@ import (
 
 func NewRouter(e *echo.Echo, cfg *config.Config) {
 	e.GET("/order", handlerOrderNew)
-	e.POST("/order", HandlerOrderDone(cfg))
+	e.POST("/order", handlerUpdateStatus(cfg))
 }

@@ -1,6 +1,7 @@
 package grpcapp
 
 import (
+	"errors"
 	"fmt"
 	"net"
 
@@ -14,11 +15,13 @@ import (
 type App struct {
 	GRPCServer *grpc.Server
 	port       int
+	ip 			net.IP
 }
 
 func New(
 	port int,
 	storage postgres.Repository,
+	ip net.IP,
 ) *App {
 	gRPCServer := grpc.NewServer()
 
@@ -27,13 +30,16 @@ func New(
 	return &App{
 		GRPCServer: gRPCServer,
 		port:       port,
+		ip:			ip,
 	}
 }
 
-func (a *App) MustRun() {
+func (a *App) MustRun() error {
 	if err := a.Run(); err != nil {
-		logger.Log.Fatal("failed to run grpc app", zap.Error(err))
+		logger.Log.Error("failed to run grpc app", zap.Error(err))
+		return errors.New("failed to start grpc app")
 	}
+	return nil
 }
 
 func (a *App) Run() error {

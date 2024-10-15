@@ -30,20 +30,20 @@ func addOrderHandler(cfg *config.Config, repository repo.OrderRepository) http.H
 			return
 		}
 
-		if order.Number == "" {
+		if order.Id == "" {
 			logger.Log.Info("order number not provided", zap.Error(err))
 			processjson.SendJSONError(w, http.StatusBadRequest, "order number not provided")
 			return
 		}
 
-		number, err := repository.SaveOrder(ctx, order)
+		id, err := repository.SaveOrder(ctx, order)
 		if err != nil {
 			logger.Log.Info("error while saving order", zap.Error(err))
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
 
-		if number == "" {
+		if id == "" {
 			logger.Log.Info("order already exists", zap.Error(err))
 			w.WriteHeader(http.StatusOK)
 			return
@@ -52,7 +52,7 @@ func addOrderHandler(cfg *config.Config, repository repo.OrderRepository) http.H
 		var response struct {
 			Number string `json:"number"`
 		}
-		response.Number = number
+		response.Number = id
 
 		err = processjson.WriteJSON(w, http.StatusOK, response, nil)
 		if err != nil {

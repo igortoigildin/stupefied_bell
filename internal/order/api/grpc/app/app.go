@@ -18,7 +18,7 @@ func New(
 ) *App {
 	storage := postgres.NewRepository(db)
 
-	grpcApp := grpcapp.New(config.Port, *storage)
+	grpcApp := grpcapp.New(config.Port, *storage, config.Ip)
 
 	return &App{
 		GRPCServer: grpcApp,

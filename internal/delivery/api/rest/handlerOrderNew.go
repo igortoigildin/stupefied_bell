@@ -9,6 +9,7 @@ import (
 	"go.uber.org/zap"
 )
 
+// responds on GET requests via '/order' endpoint and provides new order for couriers.
 func handlerOrderNew(c echo.Context) error {
 	order, err := pkg.RandomOrder()
 	if err != nil {

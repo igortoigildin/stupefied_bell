@@ -51,7 +51,13 @@ func main() {
 	// gRPC app
 	application := app.New(db, cfg)
 
-	go application.GRPCServer.MustRun()
+
+	go func() {
+		err := application.GRPCServer.MustRun()
+		if err != nil {
+			logger.Log.Fatal("error while initializing grpc app", zap.Error(err))
+		}
+	}()
 
 	// Kafka producer
 	p, err := kafka.NewProducer(&kafka.ConfigMap{

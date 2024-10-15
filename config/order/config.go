@@ -3,6 +3,7 @@ package cfgorder
 import (
 	"flag"
 	"log"
+	"net"
 	"os"
 	"time"
 
@@ -31,6 +32,7 @@ type HTTPserver struct {
 
 type GRPCServer struct {
 	Port int `yaml:"port" env-default:"50051"`
+	Ip 	net.IP `yaml:"ip" env-default:"127.0.0.1"`
 }
 
 type Kafka struct {

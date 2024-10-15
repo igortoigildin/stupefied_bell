@@ -12,7 +12,7 @@ import (
 
 func RandomOrder() ([]byte, error) {
 	order := model.Order{
-		Number:     uuid.New().String(),
+		Id:     uuid.New().String(),
 		Quantity:   5,
 		Title:      uuid.New().String(),
 		UploadedAt: time.Now(),
@@ -21,7 +21,7 @@ func RandomOrder() ([]byte, error) {
 
 	value, err := json.Marshal(order)
 	if err != nil {
-		logger.Log.Error("failed to encode order for kafka", zap.Error(err))
+		logger.Log.Error("failed to marshal order", zap.Error(err))
 		return nil, err
 	}
 

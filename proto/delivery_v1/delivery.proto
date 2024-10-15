@@ -1,16 +1,16 @@
 syntax = "proto3";
 
-package delivery;
+package order;
 
 import "google/protobuf/empty.proto";
 
 option go_package = "github.com/igortoigildin/stupefied_bell/pkg/delivery_v1;delivery_v1";
 
-service Delivery {
-    rpc SetDeliveryStatus (SetDeliveryStatusRequest) returns (google.protobuf.Empty);
+service DeliveryService {
+    rpc SetStatus (SetStatusRequest) returns (google.protobuf.Empty);
 }
 
-message SetDeliveryStatusRequest {
+message SetStatusRequest {
     Status status = 1; // Status to be set.
     string order_id = 2; // ID of order to be udpated.
 }

@@ -15,7 +15,7 @@ import (
 type App struct {
 	GRPCServer *grpc.Server
 	port       int
-	ip 			net.IP
+	ip         net.IP
 }
 
 func New(
@@ -30,7 +30,7 @@ func New(
 	return &App{
 		GRPCServer: gRPCServer,
 		port:       port,
-		ip:			ip,
+		ip:         ip,
 	}
 }
 

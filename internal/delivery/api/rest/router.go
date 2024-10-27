@@ -6,6 +6,8 @@ import (
 )
 
 func NewRouter(e *echo.Echo, cfg *config.Config) {
-	e.GET("/order", handlerOrderNew)
-	e.POST("/order", handlerUpdateStatus(cfg))
+	oc := NewOrderController(cfg)
+
+	e.GET("/order", oc.createOrder())
+	e.POST("/order", oc.updateOrder())
 }

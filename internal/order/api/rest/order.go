@@ -12,8 +12,8 @@ import (
 	repo "github.com/igortoigildin/stupefied_bell/internal/order/api"
 	"github.com/igortoigildin/stupefied_bell/internal/order/model"
 	"github.com/igortoigildin/stupefied_bell/internal/order/storage"
-	processjson "github.com/igortoigildin/stupefied_bell/pkg/lib/processJSON"
 	"github.com/igortoigildin/stupefied_bell/pkg/logger"
+	processjson "github.com/igortoigildin/stupefied_bell/pkg/processJSON"
 	"go.uber.org/zap"
 )
 

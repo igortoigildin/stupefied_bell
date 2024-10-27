@@ -6,7 +6,7 @@ import (
 
 	repo "github.com/igortoigildin/stupefied_bell/internal/order/api"
 	storage "github.com/igortoigildin/stupefied_bell/internal/order/storage"
-	delivery "github.com/igortoigildin/stupefied_bell/pkg/delivery_v1"
+	delivery "github.com/igortoigildin/stupefied_bell/pkg/delivery"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"

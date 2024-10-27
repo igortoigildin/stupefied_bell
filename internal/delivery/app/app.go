@@ -21,7 +21,6 @@ type (
 )
 
 func Run(cfg *config.Config) {
-
 	// Kafka consumer
 	cons, err := kafka.NewConsumer(cfg)
 	if err != nil {

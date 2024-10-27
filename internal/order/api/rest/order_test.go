@@ -23,7 +23,7 @@ func Test_addOrderHandler(t *testing.T) {
 		{
 			name: "Success",
 			order: model.Order{
-				Id:   "111",
+				Id:       "111",
 				Quantity: 5,
 				Title:    "First order",
 			},

@@ -12,7 +12,7 @@ import (
 
 func RandomOrder() ([]byte, error) {
 	order := model.Order{
-		Id:     uuid.New().String(),
+		Id:         uuid.New().String(),
 		Quantity:   5,
 		Title:      uuid.New().String(),
 		UploadedAt: time.Now(),

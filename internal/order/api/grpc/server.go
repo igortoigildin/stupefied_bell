@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 
-	repo "github.com/igortoigildin/stupefied_bell/internal/order/api"
+	api "github.com/igortoigildin/stupefied_bell/internal/order/api"
 	storage "github.com/igortoigildin/stupefied_bell/internal/order/storage"
 	delivery "github.com/igortoigildin/stupefied_bell/pkg/delivery"
 	"google.golang.org/grpc"
@@ -15,10 +15,10 @@ import (
 
 type ServerAPI struct {
 	delivery.UnimplementedDeliveryServiceServer
-	OrderRepository repo.OrderRepository
+	OrderRepository api.OrderRepository
 }
 
-func Register(gRPC *grpc.Server, repo repo.OrderRepository) {
+func Register(gRPC *grpc.Server, repo api.OrderRepository) {
 	delivery.RegisterDeliveryServiceServer(gRPC, &ServerAPI{OrderRepository: repo})
 }
 

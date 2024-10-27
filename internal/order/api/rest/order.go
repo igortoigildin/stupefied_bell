@@ -9,15 +9,15 @@ import (
 	"net/http"
 
 	config "github.com/igortoigildin/stupefied_bell/config/order"
-	repo "github.com/igortoigildin/stupefied_bell/internal/order/api"
+	api "github.com/igortoigildin/stupefied_bell/internal/order/api"
 	"github.com/igortoigildin/stupefied_bell/internal/order/model"
-	"github.com/igortoigildin/stupefied_bell/internal/order/storage"
+	storage "github.com/igortoigildin/stupefied_bell/internal/order/storage"
 	"github.com/igortoigildin/stupefied_bell/pkg/logger"
 	processjson "github.com/igortoigildin/stupefied_bell/pkg/processJSON"
 	"go.uber.org/zap"
 )
 
-func addOrderHandler(cfg *config.Config, repository repo.OrderRepository) http.HandlerFunc {
+func addOrderHandler(cfg *config.Config, repository api.OrderRepository) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx, cancel := context.WithTimeout(context.Background(), cfg.Timeout)
 		defer cancel()
@@ -63,7 +63,7 @@ func addOrderHandler(cfg *config.Config, repository repo.OrderRepository) http.H
 	})
 }
 
-func SelectAllOrders(cfg *config.Config, repository repo.OrderRepository) http.HandlerFunc {
+func SelectAllOrders(cfg *config.Config, repository api.OrderRepository) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx, cancel := context.WithTimeout(context.Background(), cfg.Timeout)
 		defer cancel()
@@ -94,7 +94,7 @@ func SelectAllOrders(cfg *config.Config, repository repo.OrderRepository) http.H
 	})
 }
 
-func deleteOrder(cfg *config.Config, repository repo.OrderRepository) http.HandlerFunc {
+func deleteOrder(cfg *config.Config, repository api.OrderRepository) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx, cancel := context.WithTimeout(context.Background(), cfg.Timeout)
 		defer cancel()
@@ -110,7 +110,7 @@ func deleteOrder(cfg *config.Config, repository repo.OrderRepository) http.Handl
 	})
 }
 
-func updateOrder(cfg *config.Config, repository repo.OrderRepository) http.HandlerFunc {
+func updateOrder(cfg *config.Config, repository api.OrderRepository) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx, cancel := context.WithTimeout(context.Background(), cfg.Timeout)
 		defer cancel()

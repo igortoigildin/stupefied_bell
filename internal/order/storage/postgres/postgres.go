@@ -6,7 +6,7 @@ import (
 	"errors"
 
 	"github.com/igortoigildin/stupefied_bell/internal/order/model"
-	"github.com/igortoigildin/stupefied_bell/internal/order/storage"
+	storage "github.com/igortoigildin/stupefied_bell/internal/order/storage"
 	"github.com/igortoigildin/stupefied_bell/pkg/logger"
 	"go.uber.org/zap"
 )

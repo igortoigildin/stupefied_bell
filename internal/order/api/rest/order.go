@@ -9,15 +9,23 @@ import (
 	"net/http"
 
 	config "github.com/igortoigildin/stupefied_bell/config/order"
-	api "github.com/igortoigildin/stupefied_bell/internal/order/api"
-	"github.com/igortoigildin/stupefied_bell/internal/order/model"
-	storage "github.com/igortoigildin/stupefied_bell/internal/order/storage"
+	model "github.com/igortoigildin/stupefied_bell/internal/order/model"
 	"github.com/igortoigildin/stupefied_bell/pkg/logger"
 	processjson "github.com/igortoigildin/stupefied_bell/pkg/processJSON"
 	"go.uber.org/zap"
 )
 
-func addOrderHandler(cfg *config.Config, repository api.OrderRepository) http.HandlerFunc {
+//go:generate  mockery --name=OrderRepository
+type OrderRepository interface {
+	SaveOrder(ctx context.Context, order model.Order) (string, error)
+	SelectAllOrders(ctx context.Context) ([]model.Order, error)
+	DeleteOrder(ctx context.Context, number string) error
+	UpdateOrder(ctx context.Context, order model.Order) error
+	UpdateStatus(ctx context.Context, orderID string, status string) error
+}
+
+
+func addOrderHandler(cfg *config.Config, repository OrderRepository) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx, cancel := context.WithTimeout(context.Background(), cfg.Timeout)
 		defer cancel()
@@ -63,7 +71,7 @@ func addOrderHandler(cfg *config.Config, repository api.OrderRepository) http.Ha
 	})
 }
 
-func SelectAllOrders(cfg *config.Config, repository api.OrderRepository) http.HandlerFunc {
+func SelectAllOrders(cfg *config.Config, repository OrderRepository) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx, cancel := context.WithTimeout(context.Background(), cfg.Timeout)
 		defer cancel()
@@ -94,7 +102,7 @@ func SelectAllOrders(cfg *config.Config, repository api.OrderRepository) http.Ha
 	})
 }
 
-func deleteOrder(cfg *config.Config, repository api.OrderRepository) http.HandlerFunc {
+func deleteOrder(cfg *config.Config, repository OrderRepository) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx, cancel := context.WithTimeout(context.Background(), cfg.Timeout)
 		defer cancel()
@@ -110,7 +118,7 @@ func deleteOrder(cfg *config.Config, repository api.OrderRepository) http.Handle
 	})
 }
 
-func updateOrder(cfg *config.Config, repository api.OrderRepository) http.HandlerFunc {
+func updateOrder(cfg *config.Config, repository OrderRepository) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx, cancel := context.WithTimeout(context.Background(), cfg.Timeout)
 		defer cancel()
@@ -126,7 +134,7 @@ func updateOrder(cfg *config.Config, repository api.OrderRepository) http.Handle
 		err = repository.UpdateOrder(ctx, order)
 		if err != nil {
 			switch {
-			case errors.Is(err, storage.ErrOrderNotFound):
+			case errors.Is(err, model.ErrOrderNotFound):
 				logger.Log.Info("such order not found", zap.Error(err))
 				processjson.SendJSONError(w, http.StatusBadRequest, "such order not found")
 				return

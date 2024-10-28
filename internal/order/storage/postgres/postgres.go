@@ -6,7 +6,6 @@ import (
 	"errors"
 
 	"github.com/igortoigildin/stupefied_bell/internal/order/model"
-	storage "github.com/igortoigildin/stupefied_bell/internal/order/storage"
 	"github.com/igortoigildin/stupefied_bell/pkg/logger"
 	"go.uber.org/zap"
 )
@@ -90,7 +89,7 @@ func (rep *Repository) UpdateOrder(ctx context.Context, order model.Order) error
 		return err
 	}
 	if count == 0 {
-		return storage.ErrOrderNotFound // in case no such order found, return custom error
+		return model.ErrOrderNotFound // in case no such order found, return custom error
 	}
 	return nil
 }
@@ -108,7 +107,7 @@ func (rep *Repository) UpdateStatus(ctx context.Context, orderID string, status 
 		return err
 	}
 	if count == 0 {
-		return storage.ErrOrderNotFound // in case no such order found, return custom error
+		return model.ErrOrderNotFound // in case no such order found, return custom error
 	}
 	return nil
 }

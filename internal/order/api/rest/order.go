@@ -24,7 +24,6 @@ type OrderRepository interface {
 	UpdateStatus(ctx context.Context, orderID string, status string) error
 }
 
-
 func addOrderHandler(cfg *config.Config, repository OrderRepository) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx, cancel := context.WithTimeout(context.Background(), cfg.Timeout)
